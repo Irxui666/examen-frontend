@@ -1,0 +1,60 @@
+<h2>{{ id ? 'Editar' : 'Nueva' }} mascota</h2>
+@if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+}
+@if (cargando()) {
+  <p role="status">Cargando…</p>
+}
+<form class="card" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+  <fieldset class="form-fields" [disabled]="cargando() || guardando() || cargaFallida()">
+    <div class="form-grid">
+      <label
+        >Nombre<input class="input" type="text" formControlName="nombre" /><app-campo-error
+          [control]="form.controls.nombre"
+          [mensaje]="campos()['nombre']" /></label
+      ><label
+        >Especie<select class="input" formControlName="especie">
+          <option value="">Seleccione</option>
+          <option value="PERRO">PERRO</option>
+          <option value="GATO">GATO</option>
+          <option value="OTRO">OTRO</option></select
+        ><app-campo-error
+          [control]="form.controls.especie"
+          [mensaje]="campos()['especie']" /></label
+      ><label
+        >Raza<input class="input" type="text" formControlName="raza" /><app-campo-error
+          [control]="form.controls.raza"
+          [mensaje]="campos()['raza']" /></label
+      ><label
+        >Fecha de nacimiento<input
+          class="input"
+          type="date"
+          formControlName="fechaNacimiento"
+          [max]="hoy" /><app-campo-error
+          [control]="form.controls.fechaNacimiento"
+          [mensaje]="campos()['fechaNacimiento']" /></label
+      ><label
+        >Sexo<select class="input" formControlName="sexo">
+          <option value="">Seleccione</option>
+          <option value="M">M</option>
+          <option value="H">H</option></select
+        ><app-campo-error [control]="form.controls.sexo" [mensaje]="campos()['sexo']" /></label
+      ><label
+        >Propietario<select class="input" formControlName="propietarioId">
+          <option [ngValue]="0">Seleccione</option>
+          @for (p of propietarios(); track p.id) {
+            <option [ngValue]="p.id">{{ p.nombres }}</option>
+          }</select
+        ><app-campo-error
+          [control]="form.controls.propietarioId"
+          [mensaje]="campos()['propietarioId']"
+      /></label>
+    </div>
+    <div class="actions">
+      <a class="btn" routerLink="/mascotas">Cancelar</a
+      ><button class="btn btn-primary" type="submit" [disabled]="guardando()">
+        {{ guardando() ? 'Guardando…' : 'Guardar' }}
+      </button>
+    </div>
+  </fieldset>
+</form>

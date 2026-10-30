@@ -1,0 +1,29 @@
+<section class="card">
+  <h2>VetAndes</h2>
+  <p>Atenciones de la clínica veterinaria.</p>
+  <div class="module-grid">
+    <a class="module-card" routerLink="/prestaciones" *appSiPermiso="'PRESTACION_LEER'"
+      ><h3>Prestaciones</h3>
+      <p>Catálogo de servicios por especie.</p></a
+    >
+    <a class="module-card" routerLink="/mascotas" *appSiPermiso="'MASCOTA_LEER'"
+      ><h3>Mascotas</h3>
+      <p>Registro y consulta de mascotas.</p></a
+    >
+    <a class="module-card" routerLink="/atenciones" *appSiPermiso="'ATENCION_LEER'"
+      ><h3>Atenciones</h3>
+      <p>Consulta, detalle y anulación.</p></a
+    >
+    <a class="module-card" routerLink="/atenciones/nueva" *appSiPermiso="'ATENCION_REGISTRAR'"
+      ><h3>Nueva atención</h3>
+      <p>Registrar prestaciones para una mascota.</p></a
+    >
+    <a
+      class="module-card"
+      routerLink="/reportes/atenciones-por-especie"
+      *appSiPermiso="'REPORTE_VER'"
+      ><h3>Reporte por especie</h3>
+      <p>Cantidad de atenciones e importe total.</p></a
+    >
+  </div>
+</section>

@@ -1,0 +1,57 @@
+<div class="page-header">
+  <h2>Mascotas</h2>
+  <a class="btn btn-primary" routerLink="nuevo" *appSiPermiso="'MASCOTA_ESCRIBIR'">Nueva mascota</a>
+</div>
+@if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+}
+<label class="search"
+  >Propietario<select class="input" [(ngModel)]="propietarioId" (ngModelChange)="cargar()">
+    <option value="">Todos</option>
+    @for (p of propietarios(); track p.id) {
+      <option [value]="p.id">{{ p.nombres }}</option>
+    }
+  </select></label
+>
+@if (cargando()) {
+  <p role="status">Cargando mascotas…</p>
+} @else {
+  <div class="table-wrap">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Especie</th>
+          <th>Raza</th>
+          <th>Edad</th>
+          <th>Propietario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of items(); track m.id) {
+          <tr>
+            <td>{{ m.nombre }}</td>
+            <td>{{ m.especie }}</td>
+            <td>{{ m.raza }}</td>
+            <td>{{ edad(m.fechaNacimiento) }} años</td>
+            <td>{{ m.propietarioNombre }}</td>
+            <td>
+              <div class="actions" *appSiPermiso="'MASCOTA_ESCRIBIR'">
+                <a class="btn" [routerLink]="[m.id, 'editar']">Editar</a
+                ><button class="btn btn-peligro" [disabled]="ocupado()" (click)="eliminar(m)">
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6">No se encontraron mascotas.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <button class="btn" (click)="cargar()">Actualizar</button>
+}
