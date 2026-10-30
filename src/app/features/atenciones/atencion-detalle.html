@@ -1,0 +1,68 @@
+<div class="page-header">
+  <h2>Detalle de atención</h2>
+  <a class="btn" routerLink="/atenciones">Volver</a>
+</div>
+@if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+}
+@if (cargando()) {
+  <p role="status">Cargando atención…</p>
+}
+@if (atencion(); as a) {
+  @if (registrada) {
+    <div class="exito" role="status">Atención {{ a.numero }} registrada correctamente.</div>
+  }
+  <section class="card">
+    <h3>{{ a.numero }} · {{ a.estado }}</h3>
+    <p>{{ a.fecha | date: 'dd/MM/yyyy HH:mm' }} · Registrado por {{ a.usuarioRegistro }}</p>
+    <p>Mascota: {{ a.mascotaNombre }} · {{ a.especie }} · Propietario: {{ a.propietarioNombre }}</p>
+    <p>Peso: {{ a.peso }} kg</p>
+    <p>Diagnóstico: {{ a.diagnostico }}</p>
+    <div class="table-wrap">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Prestación</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of a.detalles; track d.id) {
+            <tr>
+              <td>{{ d.prestacionNombre }}</td>
+              <td>{{ d.cantidad }}</td>
+              <td>{{ d.precioUnitario | currency: 'PEN' : 'S/ ' }}</td>
+              <td>{{ d.subtotal | currency: 'PEN' : 'S/ ' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p>Subtotal: {{ a.subtotal | currency: 'PEN' : 'S/ ' }}</p>
+    <p>Descuento: {{ a.descuento | currency: 'PEN' : 'S/ ' }}</p>
+    <p>
+      <strong>Total: {{ a.total | currency: 'PEN' : 'S/ ' }}</strong>
+    </p>
+    @if (a.motivoAnulacion) {
+      <p>Motivo de anulación: {{ a.motivoAnulacion }}</p>
+    }
+  </section>
+  @if (a.estado === 'REGISTRADA') {
+    <form class="card" *appSiPermiso="'ATENCION_ANULAR'" [formGroup]="form" (ngSubmit)="anular()">
+      <h3>Anular atención</h3>
+      <label
+        >Motivo<textarea
+          class="input"
+          formControlName="motivo"
+          minlength="10"
+          maxlength="200"
+        ></textarea
+        ><app-campo-error [control]="form.controls.motivo" [mensaje]="campos()['motivo']" /></label
+      ><button class="btn btn-peligro" type="submit" [disabled]="guardando()">
+        {{ guardando() ? 'Anulando…' : 'Anular' }}
+      </button>
+    </form>
+  }
+}

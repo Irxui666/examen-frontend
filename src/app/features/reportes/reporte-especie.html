@@ -1,0 +1,37 @@
+<h2>Atenciones por especie</h2>
+@if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+}
+<form class="card filters" (ngSubmit)="cargar()">
+  <label>Desde<input class="input" type="date" name="desde" [(ngModel)]="desde" /></label
+  ><label>Hasta<input class="input" type="date" name="hasta" [(ngModel)]="hasta" /></label
+  ><button class="btn btn-primary" type="submit" [disabled]="cargando()">Consultar</button>
+</form>
+@if (cargando()) {
+  <p role="status">Cargando reporte…</p>
+} @else {
+  <div class="table-wrap">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Especie</th>
+          <th>Cantidad de atenciones</th>
+          <th>Importe total</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of items(); track r.especie) {
+          <tr>
+            <td>{{ r.especie }}</td>
+            <td>{{ r.cantidadAtenciones }}</td>
+            <td>{{ r.importeTotal | currency: 'PEN' : 'S/ ' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3">No se encontraron atenciones.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

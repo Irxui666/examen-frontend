@@ -1,0 +1,64 @@
+<div class="page-header">
+  <h2>Atenciones</h2>
+  <a class="btn btn-primary" routerLink="nueva" *appSiPermiso="'ATENCION_REGISTRAR'"
+    >Nueva atención</a
+  >
+</div>
+@if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+}
+<form class="card filters" (ngSubmit)="cargar()">
+  <label>Mascota<input class="input" name="mascota" [(ngModel)]="filtros.mascota" /></label
+  ><label
+    >Especie<select class="input" name="especie" [(ngModel)]="filtros.especie">
+      <option value="">Todas</option>
+      <option>PERRO</option>
+      <option>GATO</option>
+      <option>OTRO</option>
+    </select></label
+  ><label
+    >Estado<select class="input" name="estado" [(ngModel)]="filtros.estado">
+      <option value="">Todos</option>
+      <option>REGISTRADA</option>
+      <option>ANULADA</option>
+    </select></label
+  ><label>Desde<input class="input" type="date" name="desde" [(ngModel)]="filtros.desde" /></label
+  ><label>Hasta<input class="input" type="date" name="hasta" [(ngModel)]="filtros.hasta" /></label
+  ><button class="btn btn-primary" type="submit" [disabled]="cargando()">Consultar</button>
+</form>
+@if (cargando()) {
+  <p role="status">Cargando atenciones…</p>
+} @else {
+  <div class="table-wrap">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Fecha</th>
+          <th>Mascota</th>
+          <th>Especie</th>
+          <th>Estado</th>
+          <th>Total</th>
+          <th>Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (a of items(); track a.id) {
+          <tr>
+            <td>{{ a.numero }}</td>
+            <td>{{ a.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ a.mascotaNombre }}</td>
+            <td>{{ a.especie }}</td>
+            <td>{{ a.estado }}</td>
+            <td>{{ a.total | currency: 'PEN' : 'S/ ' }}</td>
+            <td><a class="btn" [routerLink]="[a.id]">Ver detalle</a></td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7">No se encontraron atenciones.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

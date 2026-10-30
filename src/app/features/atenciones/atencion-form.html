@@ -1,0 +1,113 @@
+<div class="page-header">
+  <h2>Nueva atención</h2>
+  <button class="btn" (click)="cargar()" [disabled]="cargando() || guardando()">
+    Actualizar catálogos
+  </button>
+</div>
+@if (error()) {
+  <div class="alerta" role="alert">{{ error() }}</div>
+}
+@if (cargando()) {
+  <p role="status">Cargando mascotas y prestaciones…</p>
+}
+<form class="card" [formGroup]="form" (ngSubmit)="guardar()">
+  <fieldset class="form-fields" [disabled]="cargando() || cargaFallida() || guardando()">
+    <label
+      >Buscar mascota por nombre o propietario<input
+        class="input"
+        type="search"
+        [formControl]="buscar"
+        (keydown.enter)="$event.preventDefault()"
+    /></label>
+    @if (buscar.value) {
+      <div class="actions">
+        @for (m of encontradas(); track m.id) {
+          <button class="btn" type="button" (click)="elegir(m)">
+            {{ m.nombre }} · {{ m.propietarioNombre }} · {{ m.especie }}
+          </button>
+        } @empty {
+          <p>No se encontraron mascotas.</p>
+        }
+      </div>
+    }
+    @if (mascota(); as m) {
+      <p>
+        <strong>{{ m.nombre }} · {{ m.especie }} · {{ m.propietarioNombre }}</strong>
+      </p>
+    }
+    <app-campo-error [control]="form.controls.mascotaId" [mensaje]="campos()['mascotaId']" />
+    <div class="form-grid">
+      <label
+        >Peso (kg)<input
+          class="input"
+          type="number"
+          min="0.01"
+          max="999.99"
+          step="0.01"
+          formControlName="peso" /><app-campo-error
+          [control]="form.controls.peso"
+          [mensaje]="campos()['peso']" /></label
+      ><label
+        >Diagnóstico<textarea class="input" formControlName="diagnostico" maxlength="300"></textarea
+        ><app-campo-error [control]="form.controls.diagnostico" [mensaje]="campos()['diagnostico']"
+      /></label>
+    </div>
+    <h3>Prestaciones</h3>
+    <div formArrayName="detalles">
+      @for (l of detalles.controls; track l; let i = $index) {
+        <div class="detail-row" [formGroupName]="i">
+          <label
+            >Prestación<select class="input" formControlName="prestacionId">
+              <option [ngValue]="0">Seleccione</option>
+              @for (p of disponibles(); track p.id) {
+                <option [ngValue]="p.id" [disabled]="usada(p.id, i)">
+                  {{ p.nombre }} · {{ p.precio | currency: 'PEN' : 'S/ ' }}
+                </option>
+              }</select
+            ><app-campo-error
+              [control]="l.controls.prestacionId"
+              [mensaje]="campos()['detalles[' + i + '].prestacionId']"
+          /></label>
+          <label
+            >Cantidad<input
+              class="input"
+              type="number"
+              min="1"
+              max="3"
+              step="1"
+              formControlName="cantidad" /><app-campo-error
+              [control]="l.controls.cantidad"
+              [mensaje]="campos()['detalles[' + i + '].cantidad']" /></label
+          ><span>{{ lineas()[i].subtotal | currency: 'PEN' : 'S/ ' }}</span
+          ><button
+            class="btn btn-peligro"
+            type="button"
+            [disabled]="detalles.length <= 1"
+            (click)="quitar(i)"
+          >
+            Quitar
+          </button>
+        </div>
+      }
+    </div>
+    <app-campo-error [control]="form.controls.detalles" [mensaje]="campos()['detalles']" /><button
+      class="btn"
+      type="button"
+      [disabled]="detalles.length >= 8 || !mascota()"
+      (click)="agregar()"
+    >
+      Agregar prestación
+    </button>
+    <p>Subtotal: {{ subtotal() | currency: 'PEN' : 'S/ ' }}</p>
+    <p>Descuento: {{ descuento() | currency: 'PEN' : 'S/ ' }}</p>
+    <p>
+      <strong>Total: {{ total() | currency: 'PEN' : 'S/ ' }}</strong>
+    </p>
+    <div class="actions">
+      <a class="btn" routerLink="/atenciones">Cancelar</a
+      ><button class="btn btn-primary" type="submit" [disabled]="guardando()">
+        {{ guardando() ? 'Registrando…' : 'Registrar atención' }}
+      </button>
+    </div>
+  </fieldset>
+</form>
