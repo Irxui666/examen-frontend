@@ -93,8 +93,8 @@ npm run build
 npm test -- --watch=false
 ```
 
-Compilación y 31 pruebas del frontend verificadas. En Chrome se comprobaron ambos CRUD, el 409 por mascota duplicada, atención con descuento, filtros, anulación, menú y rutas por permisos y expiración tras recargar.
+Compilación y 33 pruebas del frontend verificadas. En Chrome se comprobaron ambos CRUD, el 409 por mascota duplicada, atención con descuento, filtros, anulación, menú y rutas por permisos y expiración tras recargar.
 
-Las capturas se obtuvieron con el backend real en el perfil H2 de pruebas. La validación final contra Oracle está pendiente de disponer de un servicio Oracle activo.
+Las capturas se obtuvieron con el backend real en el perfil H2 de pruebas. La revisión final verificó 40 peticiones contra Oracle y los tres perfiles en Chrome, incluidas las validaciones, los permisos y la expiración de sesión.
 
 Ramas locales `main`, `develop` y `examen-b-condori`, etiqueta `v1.0-examen-u2`. Falta configurar y publicar el remoto propio `vetandes-frontend`. La carpeta conserva el nombre de tarea 11, según la ubicación indicada.

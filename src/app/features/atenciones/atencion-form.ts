@@ -118,8 +118,8 @@ export class AtencionForm implements OnInit {
   elegir(m: Mascota) {
     if (this.guardando()) return;
     this.form.controls.mascotaId.setValue(m.id);
-    this.detalles.clear();
-    this.detalles.push(this.linea());
+    while (this.detalles.length > 1) this.detalles.removeAt(this.detalles.length - 1);
+    this.detalles.at(0).reset({ prestacionId: 0, cantidad: 1 });
     this.buscar.setValue('');
   }
   usada(id: number, index: number) {

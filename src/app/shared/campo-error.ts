@@ -1,7 +1,8 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 @Component({
   selector: 'app-campo-error',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `@if (mensaje()) {
       <small class="field-error" role="alert">{{ mensaje() }}</small>
     } @else if (control()?.touched && control()?.invalid) {
